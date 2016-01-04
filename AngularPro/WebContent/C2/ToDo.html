@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html data-ng-app="ToDoApp">
+<head>
+<meta charset="ISO-8859-1">
+<title>To Do App</title>
+<link rel="stylesheet" href="../resources/css/bootstrap.css" />
+<script type="text/javascript" src="../resources/js/angular-1.4.8/angular.js"></script>
+<script type="text/javascript">
+
+angular.module('ToDoApp',[])
+.controller('ToDoController',['$scope',function($scope){
+	
+	$scope.user = 'Rajes';
+	$showComplete = true;
+	
+	
+	$scope.items = [{action:'Learn Java',status:true},
+	                {action:'Learn Struts',status:true},
+	                {action:'Learn Spring',status:true},
+	                {action:'Learn JavaScript',status:true}];
+	
+	$scope.addItem = function(actionText){
+		$scope.items.push({action:actionText,status:false});
+		$scope.actionText="";
+	};
+	
+	$scope.incompleteCount = function(){
+		var count = 0;
+		angular.forEach($scope.items,function(item){
+			if(item.status === false){
+				count++;
+			};
+		});
+		return count;
+	};
+	
+	$scope.warningLevel = function(){
+		return $scope.incompleteCount()< 2 ? "label-success" : "label-warning";
+	}
+	
+	
+}])
+
+.filter('completedFilter',function(){
+	return function(items , showComplete){
+		var retArr=[];
+		angular.forEach(items,function(item){
+			if(item.status ==false || showComplete==true){
+				retArr.push(item);
+			}
+		});
+		return retArr;
+	}
+});
+
+</script>
+
+
+</head>
+<body data-ng-controller="ToDoController">
+
+<h2>{{user}}'s ToDo <span class="label label-default" data-ng-class="warningLevel()">{{incompleteCount()}}</span></h2>
+<p>Add Task :<input type="text" data-ng-model="actionText"><button data-ng-click="addItem(actionText)">Add</button></p>
+<table class="table table-stripped">
+<thead>
+<tr>
+<th>Task</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr data-ng-repeat="item in items | filter:showComplete | orderBy:'action'">
+<td>{{item.action}}</td>
+<td><input type="checkbox" data-ng-model="item.status"></td>
+</tr>
+</tbody>
+</table>
+Show Completed <input type="checkbox" data-ng-model="showComplete">
+<script type="text/javascript" src="../resources/js/angular-1.4.8/angular.js"></script>
+</body>
+</html>

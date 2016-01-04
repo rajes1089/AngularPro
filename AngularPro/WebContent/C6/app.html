@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Shoes&amp;Shirts</title>
+<script type="text/javascript" src="../resources/js/angular-1.4.8/angular.js"></script>
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/bootstrap-theme.css">
+<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="filters/customFilters.js"></script>
+</head>
+<body data-ng-app="ssApp" data-ng-controller="SSController" class="container">
+<div class="navbar navbar-inverse">
+	<a class="navbar-brand">Shirts &amp; Shoes</a>
+</div>
+<div class="row" data-ng-controller="productListController">
+	<div class="col-xs-3">
+		<a data-ng-click="selectCategory()" class="btn btn-block btn-default btn-lg">Home</a>
+		<a data-ng-repeat="item in data.products | orderBy:'category' | uniqueProp:'category'"  
+			data-ng-click="selectCategory(item)" class="btn btn-block btn-default btn-lg" data-ng-class="getCategoryClass(item)">
+			{{item}}
+		</a>
+	</div>
+	<div class="col-xs-8">
+		<div class="well" data-ng-repeat="item in data.products | filter:categoryFilterFn | range:selectedPage:pageSize">
+			<h3>
+				<strong>{{item.name}}</strong>
+				<span class="pull-right label label-primary">
+					{{item.price | currency}}
+				</span>
+			</h3>
+			<span class="lead">{{item.description}}</span>
+		</div>
+		<div class="pull-right btn-group">
+			<a data-ng-repeat="page in data.products| filter:categoryFilterFn | pageCount:pageSize"
+			data-ng-click="selectPage($index+1)" class="btn btn-default" data-ng-class="getPageClass($index+1)">
+				{{$index+1}}
+			</a>
+		</div>
+	</div>
+</div>
+</body>
+</html>
